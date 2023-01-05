@@ -10,9 +10,9 @@ import (
 var wsClient *wsclient.Client
 
 func main() {
-	Entities = make(map[string]Entity)
-	Entities["light.bed_light"] = &Light{}
-	Entities["binary_sensor.movement_backyard"] = &BinarySensor{}
+	Devices = make(map[string]Entity)
+	Devices["light.bed_light"] = &Light{}
+	Devices["binary_sensor.movement_backyard"] = &BinarySensor{}
 
 	wsClient = wsclient.StartClient()
 	wsClient.OnMessage(StateChanger)
@@ -50,9 +50,14 @@ func StateChanger(wsMessage []byte) {
 	}
 
 	if message.Type == "event" {
-		if _, ok := Entities[message.Event.Data.EntityID]; ok {
-			Entities[message.Event.Data.EntityID].SetState(message.Event.Data.NewState)
-			log.Print(Entities)
+		if _, ok := Devices[message.Event.Data.EntityID]; ok {
+			Devices[message.Event.Data.EntityID].SetState(message.Event.Data.NewState)
+			log.Print(Devices)
+		}
+		for _, automation := range Automations {
+			if automation.GetTriggerEntityID() == message.Event.Data.EntityID {
+				go automation.Action()
+			}
 		}
 	}
 }

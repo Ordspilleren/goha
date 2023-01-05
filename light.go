@@ -19,9 +19,3 @@ func (l *Light) SetState(state State) {
 func (l *Light) On() error {
 	return nil
 }
-
-// Policy is added to light struct
-// On state change, get all policies and check them
-func (l *Light) SetPolicy(policy func() bool) error {
-	return nil
-}

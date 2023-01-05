@@ -6,4 +6,6 @@ type Entity interface {
 	SetState(State)
 }
 
-var Entities map[string]Entity
+type Entities map[string]Entity
+
+var Devices Entities
