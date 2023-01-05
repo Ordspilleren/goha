@@ -1,19 +1,24 @@
 package main
 
+var (
+	bedLight         = Devices["light.bed_light"].(*Light)
+	movementBackyard = Devices["binary_sensor.movement_backyard"].(*BinarySensor)
+)
+
 var Automations = []Automation{
 	testAutomation,
 }
 
 var testAutomation = Automation{
 	Trigger: Trigger{
-		Entity: Devices["binary_sensor.movement_backyard"].(*BinarySensor),
+		Entity: movementBackyard,
 		State:  "on",
-		Function: func() bool {
-			return true
-		},
+	},
+	Condition: func() bool {
+		return !bedLight.IsOn()
 	},
 	Action: func() error {
-		Devices["light.bed_light"].(*Light).On()
+		bedLight.On()
 		return nil
 	},
 }

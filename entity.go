@@ -7,5 +7,3 @@ type Entity interface {
 }
 
 type Entities map[string]Entity
-
-var Devices Entities
