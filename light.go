@@ -1,13 +1,15 @@
 package main
 
-import "log"
-
 type Light struct {
 	state State
 }
 
 func (l *Light) GetEntityID() string {
 	return l.state.EntityID
+}
+
+func (l *Light) SetEntityID(entityID string) {
+	l.state.EntityID = entityID
 }
 
 func (l *Light) GetState() State {
@@ -27,6 +29,11 @@ func (l *Light) IsOn() bool {
 }
 
 func (l *Light) On() error {
-	log.Print("light turned on")
+	CallService(
+		wsClient,
+		"light",
+		"turn_on",
+		nil,
+		l.GetEntityID())
 	return nil
 }

@@ -1,8 +1,8 @@
 package main
 
 var (
-	bedLight         = Devices["light.bed_light"].(*Light)
-	movementBackyard = Devices["binary_sensor.movement_backyard"].(*BinarySensor)
+	bedLight         = Devices.AddLight("light.bed_light")
+	movementBackyard = Devices.AddBinarySensor("binary_sensor.movement_backyard")
 )
 
 var Automations = []Automation{

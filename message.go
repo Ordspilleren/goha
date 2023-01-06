@@ -3,49 +3,58 @@ package main
 import "time"
 
 type Message struct {
-	ID        int    `json:"id"`
-	Type      string `json:"type"`
-	HaVersion string `json:"ha_version"`
-	Message   string `json:"message"`
-	Success   bool   `json:"success"`
-	Event     Event  `json:"event"`
-	Error     Error  `json:"error"`
+	ID          int     `json:"id,omitempty"`
+	Type        string  `json:"type,omitempty"`
+	AccessToken string  `json:"access_token,omitempty"`
+	EventType   string  `json:"event_type,omitempty"`
+	HaVersion   string  `json:"ha_version,omitempty"`
+	Message     string  `json:"message,omitempty"`
+	Success     bool    `json:"success,omitempty"`
+	Domain      string  `json:"domain,omitempty"`
+	Service     string  `json:"service,omitempty"`
+	ServiceData any     `json:"service_data,omitempty"`
+	Target      *Target `json:"target,omitempty"`
+	Event       *Event  `json:"event,omitempty"`
+	Error       *Error  `json:"error,omitempty"`
 }
 type Attributes struct {
-	RgbColor          []int     `json:"rgb_color"`
-	ColorTemp         int       `json:"color_temp"`
-	SupportedFeatures int       `json:"supported_features"`
-	XyColor           []float64 `json:"xy_color"`
-	Brightness        int       `json:"brightness"`
-	WhiteValue        int       `json:"white_value"`
-	FriendlyName      string    `json:"friendly_name"`
+	RgbColor          []int     `json:"rgb_color,omitempty"`
+	ColorTemp         int       `json:"color_temp,omitempty"`
+	SupportedFeatures int       `json:"supported_features,omitempty"`
+	XyColor           []float64 `json:"xy_color,omitempty"`
+	Brightness        int       `json:"brightness,omitempty"`
+	WhiteValue        int       `json:"white_value,omitempty"`
+	FriendlyName      string    `json:"friendly_name,omitempty"`
 }
 type Context struct {
-	ID       string      `json:"id"`
-	ParentID interface{} `json:"parent_id"`
-	UserID   string      `json:"user_id"`
+	ID       string      `json:"id,omitempty"`
+	ParentID interface{} `json:"parent_id,omitempty"`
+	UserID   string      `json:"user_id,omitempty"`
 }
 type State struct {
-	EntityID    string     `json:"entity_id"`
-	LastChanged time.Time  `json:"last_changed"`
-	State       string     `json:"state"`
-	Attributes  Attributes `json:"attributes"`
-	LastUpdated time.Time  `json:"last_updated"`
-	Context     Context    `json:"context"`
+	EntityID    string     `json:"entity_id,omitempty"`
+	LastChanged time.Time  `json:"last_changed,omitempty"`
+	State       string     `json:"state,omitempty"`
+	Attributes  Attributes `json:"attributes,omitempty"`
+	LastUpdated time.Time  `json:"last_updated,omitempty"`
+	Context     Context    `json:"context,omitempty"`
 }
 type Data struct {
-	EntityID string `json:"entity_id"`
-	NewState State  `json:"new_state"`
-	OldState State  `json:"old_state"`
+	EntityID string `json:"entity_id,omitempty"`
+	NewState State  `json:"new_state,omitempty"`
+	OldState State  `json:"old_state,omitempty"`
 }
 type Event struct {
-	Data      Data      `json:"data"`
-	EventType string    `json:"event_type"`
-	TimeFired time.Time `json:"time_fired"`
-	Origin    string    `json:"origin"`
-	Context   Context   `json:"context"`
+	Data      Data      `json:"data,omitempty"`
+	EventType string    `json:"event_type,omitempty"`
+	TimeFired time.Time `json:"time_fired,omitempty"`
+	Origin    string    `json:"origin,omitempty"`
+	Context   Context   `json:"context,omitempty"`
 }
 type Error struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
+	Code    string `json:"code,omitempty"`
+	Message string `json:"message,omitempty"`
+}
+type Target struct {
+	EntityID string `json:"entity_id,omitempty"`
 }

@@ -8,6 +8,10 @@ func (l *BinarySensor) GetEntityID() string {
 	return l.state.EntityID
 }
 
+func (l *BinarySensor) SetEntityID(entityID string) {
+	l.state.EntityID = entityID
+}
+
 func (l *BinarySensor) GetState() State {
 	return l.state
 }
