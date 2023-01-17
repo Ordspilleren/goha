@@ -1,4 +1,4 @@
-package main
+package haautomations
 
 type Automation struct {
 	Trigger   Trigger
@@ -11,8 +11,10 @@ type Trigger struct {
 	State  string
 }
 
+type AutomationList []Automation
+
 func (a *Automation) Evaluate(entityId string, state string) {
-	if a.Trigger.Entity.GetEntityID() == entityId && a.Trigger.State == state {
+	if a.Trigger.Entity.GetEntityID() == entityId && (a.Trigger.State == state || a.Trigger.State == "") {
 		if a.Condition() {
 			a.Action()
 		}

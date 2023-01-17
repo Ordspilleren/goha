@@ -1,4 +1,4 @@
-package main
+package haautomations
 
 import "time"
 
@@ -24,6 +24,15 @@ type Attributes struct {
 	XyColor           []float64 `json:"xy_color,omitempty"`
 	Brightness        int       `json:"brightness,omitempty"`
 	WhiteValue        int       `json:"white_value,omitempty"`
+	NextDawn          time.Time `json:"next_dawn,omitempty"`
+	NextDusk          time.Time `json:"next_dusk,omitempty"`
+	NextMidnight      time.Time `json:"next_midnight,omitempty"`
+	NextNoon          time.Time `json:"next_noon,omitempty"`
+	NextRising        time.Time `json:"next_rising,omitempty"`
+	NextSetting       time.Time `json:"next_setting,omitempty"`
+	Elevation         float64   `json:"elevation,omitempty"`
+	Azimuth           float64   `json:"azimuth,omitempty"`
+	Rising            bool      `json:"rising,omitempty"`
 	FriendlyName      string    `json:"friendly_name,omitempty"`
 }
 type Context struct {

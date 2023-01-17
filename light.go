@@ -1,23 +1,7 @@
-package main
+package haautomations
 
 type Light struct {
-	state State
-}
-
-func (l *Light) GetEntityID() string {
-	return l.state.EntityID
-}
-
-func (l *Light) SetEntityID(entityID string) {
-	l.state.EntityID = entityID
-}
-
-func (l *Light) GetState() State {
-	return l.state
-}
-
-func (l *Light) SetState(state State) {
-	l.state = state
+	EntityData
 }
 
 func (l *Light) IsOn() bool {
@@ -30,9 +14,17 @@ func (l *Light) IsOn() bool {
 
 func (l *Light) On() error {
 	CallService(
-		wsClient,
 		"light",
 		"turn_on",
+		nil,
+		l.GetEntityID())
+	return nil
+}
+
+func (l *Light) Off() error {
+	CallService(
+		"light",
+		"turn_off",
 		nil,
 		l.GetEntityID())
 	return nil

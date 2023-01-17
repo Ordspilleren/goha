@@ -1,4 +1,4 @@
-package main
+package haautomations
 
 import (
 	"encoding/json"
@@ -16,14 +16,20 @@ func InteractionID() int {
 	return interactionId
 }
 
-var Devices = Entities{}
+var Entities = EntityList{}
+var Automations = AutomationList{}
 
-func main() {
+func Start(entities EntityList, automations AutomationList) error {
+	Entities = entities
+	Automations = automations
+
 	wsClient = wsclient.StartClient()
-	wsClient.OnMessage(StateChanger)
+	wsClient.OnMessage(stateChanger)
+
+	return nil
 }
 
-func StateChanger(wsMessage []byte) {
+func stateChanger(wsMessage []byte) {
 	var message Message
 
 	err := json.Unmarshal(wsMessage, &message)
@@ -35,7 +41,7 @@ func StateChanger(wsMessage []byte) {
 		log.Print("Authentication required. Authenticating...")
 		auth := Message{
 			Type:        "auth",
-			AccessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5NjAyZjNiZTA3NWM0NTkzYjRhMmU2NmFlNzBmOWE1MyIsImlhdCI6MTY3Mjg3ODk3NywiZXhwIjoxOTg4MjM4OTc3fQ.wuZeXOt42fcJjkVb2awZ7ZMRfnFyOIIOcb3uIqyriz8",
+			AccessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjOGVlZGU5NmQxNTI0NzVhYmJiMzc5OGMxZjI0Y2VkZSIsImlhdCI6MTY3Mzk5Mzg5NSwiZXhwIjoxOTg5MzUzODk1fQ.8g4EP1p0k_8vHKRvv7BxLUkuNSjtsDRBsa4EqKjLH00",
 		}
 		payload, err := json.Marshal(auth)
 		if err != nil {
@@ -59,9 +65,9 @@ func StateChanger(wsMessage []byte) {
 	}
 
 	if message.Type == "event" {
-		if _, ok := Devices[message.Event.Data.EntityID]; ok {
-			Devices[message.Event.Data.EntityID].SetState(message.Event.Data.NewState)
-			log.Print(Devices)
+		if _, ok := Entities[message.Event.Data.EntityID]; ok {
+			Entities[message.Event.Data.EntityID].SetState(message.Event.Data.NewState)
+			log.Print(Entities)
 			for _, automation := range Automations {
 				go automation.Evaluate(message.Event.Data.EntityID, message.Event.Data.NewState.State)
 			}
@@ -69,7 +75,7 @@ func StateChanger(wsMessage []byte) {
 	}
 }
 
-func CallService(wsClient *wsclient.Client, domain string, service string, serviceData any, targetEntityID string) {
+func CallService(domain string, service string, serviceData any, targetEntityID string) {
 	message := Message{
 		ID:          InteractionID(),
 		Type:        "call_service",
