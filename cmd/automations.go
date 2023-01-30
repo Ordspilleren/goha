@@ -1,10 +1,10 @@
 package main
 
-import haautomations "github.com/Ordspilleren/ha-automations"
+import homeautomation "github.com/Ordspilleren/homeautomation"
 
-var Entities = make(haautomations.EntityList)
+var Entities = make(homeautomation.EntityList)
 
-var Automations = haautomations.AutomationList{
+var Automations = homeautomation.AutomationList{
 	testAutomation,
 }
 
@@ -13,8 +13,8 @@ var (
 	movementBackyard = Entities.AddBinarySensor("binary_sensor.movement_backyard")
 )
 
-var testAutomation = haautomations.Automation{
-	Trigger: haautomations.Trigger{
+var testAutomation = homeautomation.Automation{
+	Trigger: homeautomation.Trigger{
 		Entity: movementBackyard,
 	},
 	Condition: func() bool {

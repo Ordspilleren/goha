@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/Ordspilleren/ha-automations/wsclient"
+	"github.com/Ordspilleren/homeautomation/wsclient"
 )
 
 var wsClient *wsclient.Client

@@ -1,4 +1,4 @@
-module github.com/Ordspilleren/ha-automations
+module github.com/Ordspilleren/homeautomation
 
 go 1.19
 

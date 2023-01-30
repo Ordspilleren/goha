@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 
-	haautomations "github.com/Ordspilleren/ha-automations"
+	homeautomation "github.com/Ordspilleren/homeautomation"
 )
 
 func main() {
-	err := haautomations.Start(Entities, Automations)
+	err := homeautomation.Start(Entities, Automations)
 	if err != nil {
 		log.Panic(err)
 	}
