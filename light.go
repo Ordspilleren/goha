@@ -1,4 +1,4 @@
-package haautomations
+package goha
 
 type Light struct {
 	EntityData

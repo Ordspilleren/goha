@@ -1,4 +1,4 @@
-package haautomations
+package goha
 
 type Automation struct {
 	Trigger   Trigger

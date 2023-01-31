@@ -15,8 +15,8 @@ type Client struct {
 	command chan []byte
 }
 
-func StartClient() *Client {
-	conn, _, _, err := ws.DefaultDialer.Dial(context.Background(), "ws://localhost:8123/api/websocket")
+func StartClient(url string) *Client {
+	conn, _, _, err := ws.DefaultDialer.Dial(context.Background(), url)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,4 +1,4 @@
-package haautomations
+package goha
 
 /*
 // Policy is added to light struct

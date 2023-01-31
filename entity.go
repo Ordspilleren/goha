@@ -1,4 +1,4 @@
-package haautomations
+package goha
 
 type Entity interface {
 	GetEntityID() string
@@ -27,18 +27,18 @@ func (e *EntityData) SetState(state State) {
 	e.State = state
 }
 
-type EntityList map[string]Entity
+type EntityList []Entity
 
-func (e EntityList) AddLight(entityId string) *Light {
+func (ha *HomeAutomation) AddLight(entityId string) *Light {
 	entity := &Light{}
 	entity.SetEntityID(entityId)
-	e[entityId] = entity
+	ha.Entities = append(ha.Entities, entity)
 	return entity
 }
 
-func (e EntityList) AddBinarySensor(entityId string) *BinarySensor {
+func (ha *HomeAutomation) AddBinarySensor(entityId string) *BinarySensor {
 	entity := &BinarySensor{}
 	entity.SetEntityID(entityId)
-	e[entityId] = entity
+	ha.Entities = append(ha.Entities, entity)
 	return entity
 }
