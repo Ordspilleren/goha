@@ -7,8 +7,6 @@ import (
 	"github.com/Ordspilleren/goha/wsclient"
 )
 
-var wsClient *wsclient.Client
-
 var interactionId int
 
 func InteractionID() int {
@@ -17,7 +15,7 @@ func InteractionID() int {
 }
 
 type HomeAutomation struct {
-	client        *wsclient.Client
+	wsClient      wsclient.Client
 	HAEndpoint    string
 	HAAccessToken string
 	Entities      []Entity
@@ -32,9 +30,8 @@ func New(endpoint string, accessToken string) *HomeAutomation {
 }
 
 func (ha *HomeAutomation) Start() error {
-	wsClient = wsclient.StartClient(ha.HAEndpoint)
-	ha.client = wsClient
-	ha.client.OnMessage(ha.stateChanger)
+	ha.wsClient = *wsclient.StartClient(ha.HAEndpoint)
+	ha.wsClient.OnMessage(ha.stateChanger)
 
 	return nil
 }
@@ -69,37 +66,46 @@ func (ha *HomeAutomation) stateChanger(wsMessage []byte) {
 		if err != nil {
 			log.Panic(err)
 		}
-		ha.client.SendCommand(payload)
+		ha.wsClient.SendCommand(payload)
 	}
 
 	if message.Type == "auth_ok" {
 		log.Print("Authentication OK. Subscribing to events.")
+		var entityIds []string
+		for _, entity := range ha.Entities {
+			entityIds = append(entityIds, entity.GetEntityID())
+		}
 		subscribe := Message{
 			ID:        InteractionID(),
-			Type:      "subscribe_events",
-			EventType: "state_changed",
+			Type:      "subscribe_entities",
+			EntityIDs: entityIds,
 		}
 		payload, err := json.Marshal(subscribe)
 		if err != nil {
 			log.Panic(err)
 		}
-		ha.client.SendCommand(payload)
+		ha.wsClient.SendCommand(payload)
 	}
 
 	if message.Type == "event" {
+		log.Print(string(wsMessage))
 		for entityIndex := range ha.Entities {
-			if ha.Entities[entityIndex].GetEntityID() == message.Event.Data.EntityID {
-				ha.Entities[entityIndex].SetState(message.Event.Data.NewState)
+			if state, ok := message.Event.EventAdd[ha.Entities[entityIndex].GetEntityID()]; ok {
+				ha.Entities[entityIndex].SetState(state)
+				log.Print("device added, state changed")
+			}
+			if state, ok := message.Event.EventChange[ha.Entities[entityIndex].GetEntityID()]; ok {
+				ha.Entities[entityIndex].SetState(state.Additions)
 				log.Print(ha.Entities)
 				for automationIndex := range ha.Automations {
-					go ha.Automations[automationIndex].Evaluate(message.Event.Data.EntityID, message.Event.Data.NewState.State)
+					go ha.Automations[automationIndex].Evaluate(ha.Entities[entityIndex].GetEntityID(), state.Additions.State)
 				}
 			}
 		}
 	}
 }
 
-func CallService(domain string, service string, serviceData any, targetEntityID string) {
+func (ha *HAEntity) CallService(domain string, service string, serviceData any, targetEntityID string) {
 	message := Message{
 		ID:          InteractionID(),
 		Type:        "call_service",
@@ -116,5 +122,5 @@ func CallService(domain string, service string, serviceData any, targetEntityID 
 		log.Panic(err)
 	}
 
-	wsClient.SendCommand(payload)
+	ha.wsClient.SendCommand(payload)
 }

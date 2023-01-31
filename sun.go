@@ -3,7 +3,7 @@ package goha
 import "time"
 
 type Sun struct {
-	EntityData
+	HAEntity
 }
 
 func (s *Sun) AboveHorizon() bool {

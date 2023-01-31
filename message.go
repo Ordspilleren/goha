@@ -3,19 +3,20 @@ package goha
 import "time"
 
 type Message struct {
-	ID          int     `json:"id,omitempty"`
-	Type        string  `json:"type,omitempty"`
-	AccessToken string  `json:"access_token,omitempty"`
-	EventType   string  `json:"event_type,omitempty"`
-	HaVersion   string  `json:"ha_version,omitempty"`
-	Message     string  `json:"message,omitempty"`
-	Success     bool    `json:"success,omitempty"`
-	Domain      string  `json:"domain,omitempty"`
-	Service     string  `json:"service,omitempty"`
-	ServiceData any     `json:"service_data,omitempty"`
-	Target      *Target `json:"target,omitempty"`
-	Event       *Event  `json:"event,omitempty"`
-	Error       *Error  `json:"error,omitempty"`
+	ID          int      `json:"id,omitempty"`
+	Type        string   `json:"type,omitempty"`
+	AccessToken string   `json:"access_token,omitempty"`
+	EntityIDs   []string `json:"entity_ids,omitempty"`
+	EventType   string   `json:"event_type,omitempty"`
+	HaVersion   string   `json:"ha_version,omitempty"`
+	Message     string   `json:"message,omitempty"`
+	Success     bool     `json:"success,omitempty"`
+	Domain      string   `json:"domain,omitempty"`
+	Service     string   `json:"service,omitempty"`
+	ServiceData any      `json:"service_data,omitempty"`
+	Target      *Target  `json:"target,omitempty"`
+	Event       *Event   `json:"event,omitempty"`
+	Error       *Error   `json:"error,omitempty"`
 }
 type Attributes struct {
 	RgbColor          []int     `json:"rgb_color,omitempty"`
@@ -41,12 +42,22 @@ type Context struct {
 	UserID   string      `json:"user_id,omitempty"`
 }
 type State struct {
-	EntityID    string     `json:"entity_id,omitempty"`
-	LastChanged time.Time  `json:"last_changed,omitempty"`
-	State       string     `json:"state,omitempty"`
-	Attributes  Attributes `json:"attributes,omitempty"`
-	LastUpdated time.Time  `json:"last_updated,omitempty"`
-	Context     Context    `json:"context,omitempty"`
+	LastChanged float64    `json:"lc,omitempty"`
+	State       string     `json:"s,omitempty"`
+	Attributes  Attributes `json:"a,omitempty"`
+	LastUpdated float64    `json:"lu,omitempty"`
+	Context     any        `json:"c,omitempty"`
+}
+type DiffState struct {
+	Additions State         `json:"+,omitempty"`
+	Removals  StateRemovals `json:"-,omitempty"`
+}
+type StateRemovals struct {
+	LastChanged float64  `json:"lc,omitempty"`
+	State       string   `json:"s,omitempty"`
+	Attributes  []string `json:"a,omitempty"`
+	LastUpdated float64  `json:"lu,omitempty"`
+	Context     any      `json:"c,omitempty"`
 }
 type Data struct {
 	EntityID string `json:"entity_id,omitempty"`
@@ -54,11 +65,9 @@ type Data struct {
 	OldState State  `json:"old_state,omitempty"`
 }
 type Event struct {
-	Data      Data      `json:"data,omitempty"`
-	EventType string    `json:"event_type,omitempty"`
-	TimeFired time.Time `json:"time_fired,omitempty"`
-	Origin    string    `json:"origin,omitempty"`
-	Context   Context   `json:"context,omitempty"`
+	EventAdd    map[string]State     `json:"a,omitempty"`
+	EventRemove map[string]DiffState `json:"r,omitempty"`
+	EventChange map[string]DiffState `json:"c,omitempty"`
 }
 type Error struct {
 	Code    string `json:"code,omitempty"`

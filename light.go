@@ -1,7 +1,7 @@
 package goha
 
 type Light struct {
-	EntityData
+	HAEntity
 }
 
 func (l *Light) IsOn() bool {
@@ -13,7 +13,7 @@ func (l *Light) IsOn() bool {
 }
 
 func (l *Light) On() error {
-	CallService(
+	l.CallService(
 		"light",
 		"turn_on",
 		nil,
@@ -22,7 +22,7 @@ func (l *Light) On() error {
 }
 
 func (l *Light) Off() error {
-	CallService(
+	l.CallService(
 		"light",
 		"turn_off",
 		nil,

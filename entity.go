@@ -1,5 +1,7 @@
 package goha
 
+import "github.com/Ordspilleren/goha/wsclient"
+
 type Entity interface {
 	GetEntityID() string
 	SetEntityID(string)
@@ -7,30 +9,31 @@ type Entity interface {
 	SetState(State)
 }
 
-type EntityData struct {
-	State State
+type HAEntity struct {
+	wsClient *wsclient.Client
+	EntityID string
+	State    State
 }
 
-func (e *EntityData) GetEntityID() string {
-	return e.State.EntityID
+func (e *HAEntity) GetEntityID() string {
+	return e.EntityID
 }
 
-func (e *EntityData) SetEntityID(entityID string) {
-	e.State.EntityID = entityID
+func (e *HAEntity) SetEntityID(entityID string) {
+	e.EntityID = entityID
 }
 
-func (e *EntityData) GetState() State {
+func (e *HAEntity) GetState() State {
 	return e.State
 }
 
-func (e *EntityData) SetState(state State) {
+func (e *HAEntity) SetState(state State) {
 	e.State = state
 }
 
-type EntityList []Entity
-
 func (ha *HomeAutomation) AddLight(entityId string) *Light {
 	entity := &Light{}
+	entity.wsClient = &ha.wsClient
 	entity.SetEntityID(entityId)
 	ha.Entities = append(ha.Entities, entity)
 	return entity
@@ -38,6 +41,15 @@ func (ha *HomeAutomation) AddLight(entityId string) *Light {
 
 func (ha *HomeAutomation) AddBinarySensor(entityId string) *BinarySensor {
 	entity := &BinarySensor{}
+	entity.wsClient = &ha.wsClient
+	entity.SetEntityID(entityId)
+	ha.Entities = append(ha.Entities, entity)
+	return entity
+}
+
+func (ha *HomeAutomation) AddSensor(entityId string) *Sensor {
+	entity := &Sensor{}
+	entity.wsClient = &ha.wsClient
 	entity.SetEntityID(entityId)
 	ha.Entities = append(ha.Entities, entity)
 	return entity

@@ -2,7 +2,7 @@ package main
 
 import homeautomation "github.com/Ordspilleren/goha"
 
-var Automations = homeautomation.AutomationList{
+var Automations = []homeautomation.Automation{
 	testAutomation,
 }
 

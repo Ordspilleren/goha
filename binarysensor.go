@@ -1,7 +1,7 @@
 package goha
 
 type BinarySensor struct {
-	EntityData
+	HAEntity
 }
 
 func (b *BinarySensor) Triggered() bool {
