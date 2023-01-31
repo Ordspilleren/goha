@@ -48,7 +48,7 @@ type State struct {
 	LastUpdated float64    `json:"lu,omitempty"`
 	Context     any        `json:"c,omitempty"`
 }
-type DiffState struct {
+type Diff struct {
 	Additions State         `json:"+,omitempty"`
 	Removals  StateRemovals `json:"-,omitempty"`
 }
@@ -65,9 +65,9 @@ type Data struct {
 	OldState State  `json:"old_state,omitempty"`
 }
 type Event struct {
-	EventAdd    map[string]State     `json:"a,omitempty"`
-	EventRemove map[string]DiffState `json:"r,omitempty"`
-	EventChange map[string]DiffState `json:"c,omitempty"`
+	EventAdd    map[string]State `json:"a,omitempty"`
+	EventRemove []string         `json:"r,omitempty"`
+	EventChange map[string]Diff  `json:"c,omitempty"`
 }
 type Error struct {
 	Code    string `json:"code,omitempty"`
