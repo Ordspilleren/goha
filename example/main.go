@@ -6,7 +6,7 @@ import (
 	goha "github.com/Ordspilleren/goha"
 )
 
-var ha = goha.New("ws://10.3.3.32:8123/api/websocket", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5MGRkODExYzY2ZmE0Yjk3YjUzNjJjNjU3YjBkY2Q5NiIsImlhdCI6MTY3NTE3NTY5NSwiZXhwIjoxOTkwNTM1Njk1fQ.DpL3lTAWwrYvFNt85ipeDOtDKmQShualrLRjToCl-P8")
+var ha = goha.New("ws://ha_ip:8123/api/websocket", "access_token")
 
 func main() {
 	ha.RegisterAutomations(Automations...)

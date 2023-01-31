@@ -7,8 +7,8 @@ var Automations = homeautomation.AutomationList{
 }
 
 var (
-	officeLight  = ha.AddLight("light.0x000b57fffe115b4f")
-	officeButton = ha.AddBinarySensor("sensor.0x680ae2fffe2f3b59_action")
+	officeLight  = ha.AddLight("light.office")
+	officeButton = ha.AddBinarySensor("sensor.office_button")
 )
 
 var testAutomation = homeautomation.Automation{
