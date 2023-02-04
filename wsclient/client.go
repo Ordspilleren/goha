@@ -4,39 +4,51 @@ import (
 	"context"
 	"log"
 	"net"
+	"time"
 
 	"github.com/gobwas/ws"
 	"github.com/gobwas/ws/wsutil"
 )
 
 type Client struct {
-	conn    net.Conn
-	message chan []byte
-	command chan []byte
+	url       string
+	conn      net.Conn
+	command   chan []byte
+	onMessage func([]byte)
 }
 
-func StartClient(url string) *Client {
-	conn, _, _, err := ws.DefaultDialer.Dial(context.Background(), url)
-	if err != nil {
-		log.Fatal(err)
-	}
+func New(url string, onMessage func([]byte)) *Client {
 	client := &Client{
-		conn:    conn,
-		message: make(chan []byte),
-		command: make(chan []byte),
+		url:       url,
+		command:   make(chan []byte),
+		onMessage: onMessage,
 	}
-
-	go client.readMessages()
-	go client.sendCommands()
 
 	return client
 }
 
-func (c *Client) OnMessage(action func([]byte)) {
-	for {
-		message := <-c.message
-		go action(message)
+func (c *Client) Start() error {
+	c.reconnect()
+
+	go c.readMessages()
+	go c.sendCommands()
+
+	return nil
+}
+
+func (c *Client) reconnect() error {
+	if c.conn != nil {
+		c.conn.Close()
+		time.Sleep(time.Second * 2)
 	}
+
+	conn, _, _, err := ws.DefaultDialer.Dial(context.Background(), c.url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	c.conn = conn
+
+	return nil
 }
 
 func (c *Client) SendCommand(command []byte) {
@@ -50,9 +62,9 @@ func (c *Client) readMessages() {
 		msg, _, err := wsutil.ReadServerData(c.conn)
 		if err != nil {
 			log.Printf("error: %v", err)
-			break
+			c.reconnect()
 		}
-		c.message <- msg
+		go c.onMessage(msg)
 	}
 }
 

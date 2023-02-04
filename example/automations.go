@@ -1,8 +1,8 @@
 package main
 
-import homeautomation "github.com/Ordspilleren/goha"
+import goha "github.com/Ordspilleren/goha"
 
-var Automations = []homeautomation.Automation{
+var Automations = []goha.Automation{
 	testAutomation,
 }
 
@@ -11,8 +11,8 @@ var (
 	officeButton = ha.AddBinarySensor("sensor.office_button")
 )
 
-var testAutomation = homeautomation.Automation{
-	Trigger: homeautomation.Trigger{
+var testAutomation = goha.Automation{
+	Trigger: goha.Trigger{
 		Entity: officeButton,
 	},
 	Condition: func() bool {

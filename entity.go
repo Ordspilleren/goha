@@ -3,6 +3,7 @@ package goha
 import "github.com/Ordspilleren/goha/wsclient"
 
 type Entity interface {
+	SetClient(*wsclient.Client)
 	GetEntityID() string
 	SetEntityID(string)
 	GetState() State
@@ -13,6 +14,10 @@ type HAEntity struct {
 	wsClient *wsclient.Client
 	EntityID string
 	State    State
+}
+
+func (e *HAEntity) SetClient(client *wsclient.Client) {
+	e.wsClient = client
 }
 
 func (e *HAEntity) GetEntityID() string {
@@ -32,25 +37,13 @@ func (e *HAEntity) SetState(state State) {
 }
 
 func (ha *HomeAutomation) AddLight(entityId string) *Light {
-	entity := &Light{}
-	entity.wsClient = &ha.wsClient
-	entity.SetEntityID(entityId)
-	ha.Entities = append(ha.Entities, entity)
-	return entity
+	return ha.AddEntity(&Light{}, entityId).(*Light)
 }
 
 func (ha *HomeAutomation) AddBinarySensor(entityId string) *BinarySensor {
-	entity := &BinarySensor{}
-	entity.wsClient = &ha.wsClient
-	entity.SetEntityID(entityId)
-	ha.Entities = append(ha.Entities, entity)
-	return entity
+	return ha.AddEntity(&BinarySensor{}, entityId).(*BinarySensor)
 }
 
 func (ha *HomeAutomation) AddSensor(entityId string) *Sensor {
-	entity := &Sensor{}
-	entity.wsClient = &ha.wsClient
-	entity.SetEntityID(entityId)
-	ha.Entities = append(ha.Entities, entity)
-	return entity
+	return ha.AddEntity(&Sensor{}, entityId).(*Sensor)
 }

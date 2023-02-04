@@ -3,6 +3,7 @@ package goha
 import (
 	"encoding/json"
 	"log"
+	"sync"
 
 	"github.com/Ordspilleren/goha/wsclient"
 )
@@ -29,9 +30,12 @@ func New(endpoint string, accessToken string) *HomeAutomation {
 	}
 }
 
-func (ha *HomeAutomation) Start() error {
-	ha.wsClient = *wsclient.StartClient(ha.HAEndpoint)
-	ha.wsClient.OnMessage(ha.stateChanger)
+func (ha *HomeAutomation) Start(waitGroup *sync.WaitGroup) error {
+	ha.wsClient = *wsclient.New(ha.HAEndpoint, ha.stateChanger)
+	ha.wsClient.Start()
+	ha.sendAuth()
+
+	waitGroup.Add(1)
 
 	return nil
 }
@@ -48,6 +52,26 @@ func (ha *HomeAutomation) RegisterEntities(entities ...Entity) error {
 	return nil
 }
 
+func (ha *HomeAutomation) AddEntity(entity Entity, entityId string) Entity {
+	entity.SetClient(&ha.wsClient)
+	entity.SetEntityID(entityId)
+	ha.RegisterEntities(entity)
+
+	return entity
+}
+
+func (ha *HomeAutomation) sendAuth() {
+	auth := Message{
+		Type:        "auth",
+		AccessToken: ha.HAAccessToken,
+	}
+	payload, err := json.Marshal(auth)
+	if err != nil {
+		log.Panic(err)
+	}
+	ha.wsClient.SendCommand(payload)
+}
+
 func (ha *HomeAutomation) stateChanger(wsMessage []byte) {
 	var message Message
 
@@ -58,15 +82,7 @@ func (ha *HomeAutomation) stateChanger(wsMessage []byte) {
 
 	if message.Type == "auth_required" {
 		log.Print("Authentication required. Authenticating...")
-		auth := Message{
-			Type:        "auth",
-			AccessToken: ha.HAAccessToken,
-		}
-		payload, err := json.Marshal(auth)
-		if err != nil {
-			log.Panic(err)
-		}
-		ha.wsClient.SendCommand(payload)
+		ha.sendAuth()
 	}
 
 	if message.Type == "auth_ok" {
