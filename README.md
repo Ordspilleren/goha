@@ -35,3 +35,27 @@ var testAutomation = homeautomation.Automation{
 }
 ```
 Within the `Condition` and `Action` functions you can do anything you would normally do in Go, including performing actions on the previously defined device variables.
+
+### Running in Docker
+Since Go programs compile into a single binary, the automations can be run on any machine by just copying it and executing. However, if you prefer to run it as a Docker container, this can faily easily be achieved.
+
+The below `docker-compose` example runs a Go binary from a mounted volume, and as such it can be easily replaced without rebuilding the image:
+
+```yaml
+homeautomation:
+  container_name: homeautomation
+  image: gcr.io/distroless/static-debian11
+  volumes:
+    - /srv/appdata/homeautomation:/app
+  entrypoint: ["/app/homeautomation"]
+  restart: unless-stopped
+```
+
+Since the above example just runs a binary from a volume, we can very write a script to replace it when new automations have been added:
+
+```bash
+#!/bin/bash
+CGO_ENABLED=0 go build
+ssh server 'rm /srv/appdata/homeautomation/homeautomation'
+scp homeautomation server:/srv/appdata/homeautomation
+```
