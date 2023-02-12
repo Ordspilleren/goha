@@ -1,49 +1,32 @@
 package goha
 
+type Condition func(*Trigger) bool
+type Action func() error
+
 type Automation struct {
-	Triggers  []Entity
-	Condition func() bool
-	Action    func() error
+	Triggers  []Trigger
+	Condition Condition
+	Action    Action
 }
 
-func (a *Automation) Evaluate(entityId string, previousState State) {
+type Trigger struct {
+	Entity Entity
+}
+
+func DefaultCondition(t *Trigger) bool {
+	return t.EnsureDifferentState()
+}
+
+func (t *Trigger) EnsureDifferentState() bool {
+	return t.Entity.GetState().State != t.Entity.GetPreviousState().State
+}
+
+func (a *Automation) Evaluate(entityId string) {
 	for _, trigger := range a.Triggers {
-		if trigger.GetEntityID() == entityId {
-			if a.Condition() && trigger.GetState().State != previousState.State {
+		if trigger.Entity.GetEntityID() == entityId {
+			if a.Condition(&trigger) {
 				a.Action()
 			}
 		}
 	}
 }
-
-/*
-type Automation struct {
-	Trigger   Trigger
-	Condition func() bool
-	Action    func() error
-}
-
-type Trigger struct {
-	Entity Entity
-	State  string
-}
-
-func (a *Automation) SetTrigger(entity Entity, state string) {
-	a.Trigger = Trigger{
-		Entity: entity,
-		State:  state,
-	}
-}
-
-func (a *Automation) SetCondition(condition func() bool) {
-	a.Condition = condition
-}
-
-func (a *Automation) SetAction(action func() error) {
-	a.Action = action
-}
-
-func (a *Automation) GetTriggerEntityID() string {
-	return a.Trigger.Entity.GetEntityID()
-}
-*/

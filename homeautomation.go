@@ -61,6 +61,18 @@ func (ha *HomeAutomation) AddEntity(entity Entity, entityId string) Entity {
 	return entity
 }
 
+func (ha *HomeAutomation) AddAutomation(condition Condition, action Action, triggers ...Trigger) Automation {
+	automation := Automation{
+		Triggers:  triggers,
+		Condition: condition,
+		Action:    action,
+	}
+
+	ha.RegisterAutomations(automation)
+
+	return automation
+}
+
 func (ha *HomeAutomation) sendAuth() {
 	auth := Message{
 		Type:        "auth",
@@ -113,10 +125,9 @@ func (ha *HomeAutomation) stateChanger(wsMessage []byte) {
 				log.Print("device added, state changed")
 			}
 			if state, ok := message.Event.EventChange[ha.Entities[entityIndex].GetEntityID()]; ok {
-				previousState := ha.Entities[entityIndex].GetState()
 				ha.Entities[entityIndex].MergeState(state.Additions)
 				for automationIndex := range ha.Automations {
-					go ha.Automations[automationIndex].Evaluate(ha.Entities[entityIndex].GetEntityID(), previousState)
+					go ha.Automations[automationIndex].Evaluate(ha.Entities[entityIndex].GetEntityID())
 				}
 			}
 		}

@@ -8,13 +8,15 @@ type Entity interface {
 	SetEntityID(string)
 	GetState() State
 	SetState(State)
+	GetPreviousState() State
 	MergeState(State)
 }
 
 type HAEntity struct {
-	wsClient *wsclient.Client
-	EntityID string
-	State    State
+	wsClient      *wsclient.Client
+	EntityID      string
+	State         State
+	PreviousState State
 }
 
 func (e *HAEntity) SetClient(client *wsclient.Client) {
@@ -34,10 +36,16 @@ func (e *HAEntity) GetState() State {
 }
 
 func (e *HAEntity) SetState(state State) {
+	e.PreviousState = e.State
 	e.State = state
 }
 
+func (e *HAEntity) GetPreviousState() State {
+	return e.State
+}
+
 func (e *HAEntity) MergeState(state State) {
+	e.PreviousState = e.State
 	e.State.Merge(state)
 }
 

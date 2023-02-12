@@ -12,12 +12,12 @@ var (
 )
 
 var testAutomation = goha.Automation{
-	Triggers: []goha.Entity{
-		officeButton,
+	Triggers: []goha.Trigger{
+		{
+			Entity: officeButton,
+		},
 	},
-	Condition: func() bool {
-		return true
-	},
+	Condition: goha.DefaultCondition,
 	Action: func() error {
 		if officeButton.Triggered() {
 			officeLight.On()
