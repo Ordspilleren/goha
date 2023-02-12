@@ -35,6 +35,7 @@ type Attributes struct {
 	Azimuth           float64   `json:"azimuth,omitempty"`
 	Rising            bool      `json:"rising,omitempty"`
 	FriendlyName      string    `json:"friendly_name,omitempty"`
+	Source            string    `json:"source,omitempty"`
 }
 type Context struct {
 	ID       string      `json:"id,omitempty"`
@@ -43,9 +44,9 @@ type Context struct {
 }
 type State struct {
 	LastChanged float64    `json:"lc,omitempty"`
+	LastUpdated float64    `json:"lu,omitempty"`
 	State       string     `json:"s,omitempty"`
 	Attributes  Attributes `json:"a,omitempty"`
-	LastUpdated float64    `json:"lu,omitempty"`
 	Context     any        `json:"c,omitempty"`
 }
 type Diff struct {

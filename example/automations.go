@@ -12,8 +12,8 @@ var (
 )
 
 var testAutomation = goha.Automation{
-	Trigger: goha.Trigger{
-		Entity: officeButton,
+	Triggers: []goha.Entity{
+		officeButton,
 	},
 	Condition: func() bool {
 		return true

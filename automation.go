@@ -1,20 +1,17 @@
 package goha
 
 type Automation struct {
-	Trigger   Trigger
+	Triggers  []Entity
 	Condition func() bool
 	Action    func() error
 }
 
-type Trigger struct {
-	Entity Entity
-	State  string
-}
-
-func (a *Automation) Evaluate(entityId string, state string) {
-	if a.Trigger.Entity.GetEntityID() == entityId && (a.Trigger.State == state || a.Trigger.State == "") {
-		if a.Condition() {
-			a.Action()
+func (a *Automation) Evaluate(entityId string, previousState State) {
+	for _, trigger := range a.Triggers {
+		if trigger.GetEntityID() == entityId {
+			if a.Condition() && trigger.GetState().State != previousState.State {
+				a.Action()
+			}
 		}
 	}
 }
