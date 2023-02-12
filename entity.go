@@ -41,7 +41,7 @@ func (e *HAEntity) SetState(state State) {
 }
 
 func (e *HAEntity) GetPreviousState() State {
-	return e.State
+	return e.PreviousState
 }
 
 func (e *HAEntity) MergeState(state State) {
