@@ -9,14 +9,13 @@ type Entity interface {
 	GetState() State
 	SetState(State)
 	GetPreviousState() State
-	MergeState(State)
 }
 
 type HAEntity struct {
 	wsClient      *wsclient.Client
-	EntityID      string
-	State         State
-	PreviousState State
+	entityID      string
+	state         State
+	previousState State
 }
 
 func (e *HAEntity) SetClient(client *wsclient.Client) {
@@ -24,29 +23,24 @@ func (e *HAEntity) SetClient(client *wsclient.Client) {
 }
 
 func (e *HAEntity) GetEntityID() string {
-	return e.EntityID
+	return e.entityID
 }
 
 func (e *HAEntity) SetEntityID(entityID string) {
-	e.EntityID = entityID
+	e.entityID = entityID
 }
 
 func (e *HAEntity) GetState() State {
-	return e.State
+	return e.state
 }
 
 func (e *HAEntity) SetState(state State) {
-	e.PreviousState = e.State
-	e.State = state
+	e.previousState = e.state
+	e.state.Merge(state)
 }
 
 func (e *HAEntity) GetPreviousState() State {
-	return e.PreviousState
-}
-
-func (e *HAEntity) MergeState(state State) {
-	e.PreviousState = e.State
-	e.State.Merge(state)
+	return e.previousState
 }
 
 func (ha *HomeAutomation) AddLight(entityId string) *Light {
@@ -63,4 +57,8 @@ func (ha *HomeAutomation) AddSensor(entityId string) *Sensor {
 
 func (ha *HomeAutomation) AddPerson(entityId string) *Person {
 	return ha.AddEntity(&Person{}, entityId).(*Person)
+}
+
+func (ha *HomeAutomation) AddSun(entityId string) *Sun {
+	return ha.AddEntity(&Sun{}, entityId).(*Sun)
 }

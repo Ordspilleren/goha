@@ -4,7 +4,7 @@ type Light struct {
 	HAEntity
 }
 
-func (l *Light) IsOn() bool {
+func (l *Light) On() bool {
 	if l.GetState().State == "on" {
 		return true
 	} else {
@@ -12,7 +12,7 @@ func (l *Light) IsOn() bool {
 	}
 }
 
-func (l *Light) On() error {
+func (l *Light) TurnOn() error {
 	l.CallService(
 		"light",
 		"turn_on",
@@ -21,7 +21,7 @@ func (l *Light) On() error {
 	return nil
 }
 
-func (l *Light) Off() error {
+func (l *Light) TurnOff() error {
 	l.CallService(
 		"light",
 		"turn_off",

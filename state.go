@@ -7,8 +7,7 @@ func mergef[T comparable](a, b *T) {
 }
 
 // TODO: Create per entity attribute structs and copy values into those.
-// Use pointers for message structure and use mergef to determine which fields to copy over.
-// Each entity type will then implement a merge function for its attributes.
+// Use a generic optional package like https://github.com/Southclaws/opt for struct fields.
 func (state *State) Merge(newState State) {
 	mergef(&state.LastChanged, &newState.LastChanged)
 	mergef(&state.LastUpdated, &newState.LastUpdated)

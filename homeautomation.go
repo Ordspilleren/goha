@@ -2,7 +2,6 @@ package goha
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"sync"
 
@@ -118,14 +117,13 @@ func (ha *HomeAutomation) stateChanger(wsMessage []byte) {
 
 	if message.Type == "event" {
 		log.Print(string(wsMessage))
-		fmt.Printf("%+v\n", message.Event.EventChange)
 		for entityIndex := range ha.Entities {
 			if state, ok := message.Event.EventAdd[ha.Entities[entityIndex].GetEntityID()]; ok {
 				ha.Entities[entityIndex].SetState(state)
 				log.Print("device added, state changed")
 			}
 			if state, ok := message.Event.EventChange[ha.Entities[entityIndex].GetEntityID()]; ok {
-				ha.Entities[entityIndex].MergeState(state.Additions)
+				ha.Entities[entityIndex].SetState(state.Additions)
 				for automationIndex := range ha.Automations {
 					go ha.Automations[automationIndex].Evaluate(ha.Entities[entityIndex].GetEntityID())
 				}

@@ -20,9 +20,9 @@ var testAutomation = goha.Automation{
 	Condition: goha.DefaultCondition,
 	Action: func() error {
 		if officeButton.Triggered() {
-			officeLight.On()
+			officeLight.TurnOn()
 		} else {
-			officeLight.Off()
+			officeLight.TurnOff()
 		}
 		return nil
 	},
