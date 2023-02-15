@@ -20,7 +20,6 @@ type HomeAutomation struct {
 	HAEndpoint    string
 	HAAccessToken string
 	Entities      []Entity
-	Automations   []Automation
 }
 
 func New(endpoint string, accessToken string) *HomeAutomation {
@@ -40,12 +39,6 @@ func (ha *HomeAutomation) Start(waitGroup *sync.WaitGroup) error {
 	return nil
 }
 
-func (ha *HomeAutomation) RegisterAutomations(automations ...Automation) error {
-	ha.Automations = append(ha.Automations, automations...)
-
-	return nil
-}
-
 func (ha *HomeAutomation) RegisterEntities(entities ...Entity) error {
 	ha.Entities = append(ha.Entities, entities...)
 
@@ -58,18 +51,6 @@ func (ha *HomeAutomation) AddEntity(entity Entity, entityId string) Entity {
 	ha.RegisterEntities(entity)
 
 	return entity
-}
-
-func (ha *HomeAutomation) AddAutomation(condition Condition, action Action, triggers ...Trigger) Automation {
-	automation := Automation{
-		Triggers:  triggers,
-		Condition: condition,
-		Action:    action,
-	}
-
-	ha.RegisterAutomations(automation)
-
-	return automation
 }
 
 func (ha *HomeAutomation) sendAuth() {
@@ -124,8 +105,8 @@ func (ha *HomeAutomation) stateChanger(wsMessage []byte) {
 			}
 			if state, ok := message.Event.EventChange[ha.Entities[entityIndex].GetEntityID()]; ok {
 				ha.Entities[entityIndex].SetState(state.Additions)
-				for automationIndex := range ha.Automations {
-					go ha.Automations[automationIndex].Evaluate(ha.Entities[entityIndex].GetEntityID())
+				for automationIndex := range ha.Entities[entityIndex].GetAutomations() {
+					go ha.Entities[entityIndex].GetAutomations()[automationIndex].Evaluate(ha.Entities[entityIndex])
 				}
 			}
 		}

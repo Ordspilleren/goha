@@ -1,6 +1,8 @@
 package goha
 
-import "github.com/Ordspilleren/goha/wsclient"
+import (
+	"github.com/Ordspilleren/goha/wsclient"
+)
 
 type Entity interface {
 	SetClient(*wsclient.Client)
@@ -9,6 +11,8 @@ type Entity interface {
 	GetState() State
 	SetState(State)
 	GetPreviousState() State
+	SetAutomations(...Automation) *HAEntity
+	GetAutomations() []Automation
 }
 
 type HAEntity struct {
@@ -16,6 +20,7 @@ type HAEntity struct {
 	entityID      string
 	state         State
 	previousState State
+	automations   []Automation
 }
 
 func (e *HAEntity) SetClient(client *wsclient.Client) {
@@ -42,6 +47,39 @@ func (e *HAEntity) SetState(state State) {
 func (e *HAEntity) GetPreviousState() State {
 	return e.previousState
 }
+
+func (e *HAEntity) SetAutomations(automations ...Automation) *HAEntity {
+	e.automations = append(e.automations, automations...)
+	return e
+}
+
+func (e *HAEntity) GetAutomations() []Automation {
+	return e.automations
+}
+
+/* TODO: Can we make this work?
+
+func (e *HAEntity) Light() *Light {
+	return &Light{e}
+}
+
+func (e *HAEntity) BinarySensor() *BinarySensor {
+	return &BinarySensor{e}
+}
+
+func (e *HAEntity) Sensor() *Sensor {
+	return &Sensor{e}
+}
+
+func (e *HAEntity) Person() *Person {
+	return &Person{e}
+}
+
+func (e *HAEntity) Sun() *Sun {
+	return &Sun{e}
+}
+
+*/
 
 func (ha *HomeAutomation) AddLight(entityId string) *Light {
 	return ha.AddEntity(&Light{}, entityId).(*Light)

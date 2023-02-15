@@ -11,7 +11,7 @@ var wg sync.WaitGroup
 var ha = goha.New("ws://ha_ip:8123/api/websocket", "access_token")
 
 func main() {
-	ha.RegisterAutomations(Automations...)
+	SetupAutomations()
 	err := ha.Start(&wg)
 	if err != nil {
 		log.Panic(err)
