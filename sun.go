@@ -29,3 +29,7 @@ func (s *Sun) NextSetting() time.Time {
 func (s *Sun) NextRising() time.Time {
 	return s.GetState().Attributes.NextRising
 }
+
+func (s *Sun) Elevation() float64 {
+	return s.GetState().Attributes.Elevation
+}

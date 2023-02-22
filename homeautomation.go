@@ -112,23 +112,3 @@ func (ha *HomeAutomation) stateChanger(wsMessage []byte) {
 		}
 	}
 }
-
-func (ha *HAEntity) CallService(domain string, service string, serviceData any, targetEntityID string) {
-	message := Message{
-		ID:          InteractionID(),
-		Type:        "call_service",
-		Domain:      domain,
-		Service:     service,
-		ServiceData: serviceData,
-		Target: &Target{
-			EntityID: targetEntityID,
-		},
-	}
-
-	payload, err := json.Marshal(message)
-	if err != nil {
-		log.Panic(err)
-	}
-
-	ha.wsClient.SendCommand(payload)
-}

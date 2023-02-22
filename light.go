@@ -13,19 +13,31 @@ func (l *Light) On() bool {
 }
 
 func (l *Light) TurnOn() error {
-	l.CallService(
-		"light",
-		"turn_on",
-		nil,
-		l.GetEntityID())
+	message := Message{
+		ID:          InteractionID(),
+		Type:        "call_service",
+		Domain:      "light",
+		Service:     "turn_on",
+		ServiceData: nil,
+		Target: &Target{
+			EntityID: l.GetEntityID(),
+		},
+	}
+	l.ChangeState(message)
 	return nil
 }
 
 func (l *Light) TurnOff() error {
-	l.CallService(
-		"light",
-		"turn_off",
-		nil,
-		l.GetEntityID())
+	message := Message{
+		ID:          InteractionID(),
+		Type:        "call_service",
+		Domain:      "light",
+		Service:     "turn_off",
+		ServiceData: nil,
+		Target: &Target{
+			EntityID: l.GetEntityID(),
+		},
+	}
+	l.ChangeState(message)
 	return nil
 }

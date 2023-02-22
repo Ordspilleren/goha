@@ -13,7 +13,7 @@ var (
 
 var testAutomation = goha.Automation{
 	Condition: goha.DefaultCondition,
-	Action: func() error {
+	Action: func(e goha.Entity) error {
 		if officeButton.Triggered() {
 			officeLight.TurnOn()
 		} else {

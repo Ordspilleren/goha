@@ -51,7 +51,7 @@ homeautomation:
   restart: unless-stopped
 ```
 
-Since the above example just runs a binary from a volume, we can very write a script to replace it when new automations have been added:
+Since the above example just runs a binary from a volume, we can very easily write a script to replace it when new automations have been added:
 
 ```bash
 #!/bin/bash

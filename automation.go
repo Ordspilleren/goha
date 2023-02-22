@@ -1,7 +1,7 @@
 package goha
 
 type Condition func(Entity) bool
-type Action func() error
+type Action func(Entity) error
 
 type Automation struct {
 	Condition Condition
@@ -14,6 +14,6 @@ func DefaultCondition(e Entity) bool {
 
 func (a *Automation) Evaluate(entity Entity) {
 	if a.Condition(entity) {
-		a.Action()
+		a.Action(entity)
 	}
 }
