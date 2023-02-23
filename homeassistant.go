@@ -16,21 +16,21 @@ func InteractionID() int {
 	return interactionId
 }
 
-type HomeAutomation struct {
+type HomeAssistant struct {
 	wsClient      wsclient.Client
 	HAEndpoint    string
 	HAAccessToken string
 	Entities      []Entity
 }
 
-func New(endpoint string, accessToken string) *HomeAutomation {
-	return &HomeAutomation{
+func New(endpoint string, accessToken string) *HomeAssistant {
+	return &HomeAssistant{
 		HAEndpoint:    endpoint,
 		HAAccessToken: accessToken,
 	}
 }
 
-func (ha *HomeAutomation) Start(waitGroup *sync.WaitGroup) error {
+func (ha *HomeAssistant) Start(waitGroup *sync.WaitGroup) error {
 	ha.wsClient = *wsclient.New(ha.HAEndpoint, ha.stateChanger)
 	ha.wsClient.Start()
 	ha.sendAuth()
@@ -40,13 +40,13 @@ func (ha *HomeAutomation) Start(waitGroup *sync.WaitGroup) error {
 	return nil
 }
 
-func (ha *HomeAutomation) RegisterEntities(entities ...Entity) error {
+func (ha *HomeAssistant) RegisterEntities(entities ...Entity) error {
 	ha.Entities = append(ha.Entities, entities...)
 
 	return nil
 }
 
-func (ha *HomeAutomation) AddEntity(entity Entity, entityId string) Entity {
+func (ha *HomeAssistant) AddEntity(entity Entity, entityId string) Entity {
 	entity.SetIntegration(ha)
 	entity.SetEntityID(entityId)
 	ha.RegisterEntities(entity)
@@ -54,7 +54,27 @@ func (ha *HomeAutomation) AddEntity(entity Entity, entityId string) Entity {
 	return entity
 }
 
-func (ha *HomeAutomation) sendAuth() {
+func (ha *HomeAssistant) AddLight(entityId string) *Light {
+	return ha.AddEntity(&Light{}, entityId).(*Light)
+}
+
+func (ha *HomeAssistant) AddBinarySensor(entityId string) *BinarySensor {
+	return ha.AddEntity(&BinarySensor{}, entityId).(*BinarySensor)
+}
+
+func (ha *HomeAssistant) AddSensor(entityId string) *Sensor {
+	return ha.AddEntity(&Sensor{}, entityId).(*Sensor)
+}
+
+func (ha *HomeAssistant) AddPerson(entityId string) *Person {
+	return ha.AddEntity(&Person{}, entityId).(*Person)
+}
+
+func (ha *HomeAssistant) AddSun(entityId string) *Sun {
+	return ha.AddEntity(&Sun{}, entityId).(*Sun)
+}
+
+func (ha *HomeAssistant) sendAuth() {
 	auth := Message{
 		Type:        "auth",
 		AccessToken: ha.HAAccessToken,
@@ -66,7 +86,7 @@ func (ha *HomeAutomation) sendAuth() {
 	ha.wsClient.SendCommand(payload)
 }
 
-func (ha *HomeAutomation) stateChanger(wsMessage []byte) {
+func (ha *HomeAssistant) stateChanger(wsMessage []byte) {
 	var message Message
 
 	err := json.Unmarshal(wsMessage, &message)
@@ -114,7 +134,7 @@ func (ha *HomeAutomation) stateChanger(wsMessage []byte) {
 	}
 }
 
-func (ha *HomeAutomation) SendCommand(entity Entity, action string) error {
+func (ha *HomeAssistant) SendCommand(entity Entity, action string) error {
 	var domain string
 	switch t := entity.(type) {
 	case *Light:

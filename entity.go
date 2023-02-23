@@ -76,23 +76,3 @@ func (e *HAEntity) Sun() *Sun {
 }
 
 */
-
-func (ha *HomeAutomation) AddLight(entityId string) *Light {
-	return ha.AddEntity(&Light{}, entityId).(*Light)
-}
-
-func (ha *HomeAutomation) AddBinarySensor(entityId string) *BinarySensor {
-	return ha.AddEntity(&BinarySensor{}, entityId).(*BinarySensor)
-}
-
-func (ha *HomeAutomation) AddSensor(entityId string) *Sensor {
-	return ha.AddEntity(&Sensor{}, entityId).(*Sensor)
-}
-
-func (ha *HomeAutomation) AddPerson(entityId string) *Person {
-	return ha.AddEntity(&Person{}, entityId).(*Person)
-}
-
-func (ha *HomeAutomation) AddSun(entityId string) *Sun {
-	return ha.AddEntity(&Sun{}, entityId).(*Sun)
-}

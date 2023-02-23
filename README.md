@@ -25,16 +25,24 @@ var (
 ```
 Then, you create your automations by adding instances of the `Automation` struct:
 ```go
-var testAutomation = homeautomation.Automation{
-  Trigger: homeautomation.Trigger{
-    Entity: officeButton,
-    State: "on"
-  },
-  Condition: func() bool {},
-  Action: func() error {},
+var testAutomation = goha.Automation{
+	Condition: goha.DefaultCondition,
+	Action: func(e goha.Entity) error {
+		if officeButton.Triggered() {
+			officeLight.TurnOn()
+		} else {
+			officeLight.TurnOff()
+		}
+		return nil
+	},
 }
 ```
 Within the `Condition` and `Action` functions you can do anything you would normally do in Go, including performing actions on the previously defined device variables.
+
+### Unit tests for automations
+One of the primary benefits of writing automations as code is that we get the ability to properly test them.
+
+In the [`example/`](./example) folder you can find an example of how to do this.
 
 ### Running in Docker
 Since Go programs compile into a single binary, the automations can be run on any machine by just copying it and executing. However, if you prefer to run it as a Docker container, this can faily easily be achieved.
