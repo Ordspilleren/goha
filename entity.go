@@ -1,14 +1,7 @@
 package goha
 
-import (
-	"encoding/json"
-	"log"
-
-	"github.com/Ordspilleren/goha/wsclient"
-)
-
 type Entity interface {
-	SetClient(*wsclient.Client)
+	SetIntegration(Integration)
 	GetEntityID() string
 	SetEntityID(string)
 	GetState() State
@@ -16,19 +9,18 @@ type Entity interface {
 	GetPreviousState() State
 	SetAutomations(...Automation) *HAEntity
 	GetAutomations() []Automation
-	ChangeState(any) error
 }
 
 type HAEntity struct {
-	wsClient      *wsclient.Client
+	integration   Integration
 	entityID      string
 	state         State
 	previousState State
 	automations   []Automation
 }
 
-func (e *HAEntity) SetClient(client *wsclient.Client) {
-	e.wsClient = client
+func (e *HAEntity) SetIntegration(integration Integration) {
+	e.integration = integration
 }
 
 func (e *HAEntity) GetEntityID() string {
@@ -59,16 +51,6 @@ func (e *HAEntity) SetAutomations(automations ...Automation) *HAEntity {
 
 func (e *HAEntity) GetAutomations() []Automation {
 	return e.automations
-}
-
-func (ha *HAEntity) ChangeState(action any) error {
-	payload, err := json.Marshal(action)
-	if err != nil {
-		log.Panic(err)
-	}
-
-	ha.wsClient.SendCommand(payload)
-	return nil
 }
 
 /* TODO: Can we make this work?

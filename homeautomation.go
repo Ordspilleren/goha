@@ -2,6 +2,7 @@ package goha
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"sync"
 
@@ -46,7 +47,7 @@ func (ha *HomeAutomation) RegisterEntities(entities ...Entity) error {
 }
 
 func (ha *HomeAutomation) AddEntity(entity Entity, entityId string) Entity {
-	entity.SetClient(&ha.wsClient)
+	entity.SetIntegration(ha)
 	entity.SetEntityID(entityId)
 	ha.RegisterEntities(entity)
 
@@ -111,4 +112,33 @@ func (ha *HomeAutomation) stateChanger(wsMessage []byte) {
 			}
 		}
 	}
+}
+
+func (ha *HomeAutomation) SendCommand(entity Entity, action string) error {
+	var domain string
+	switch t := entity.(type) {
+	case *Light:
+		domain = "light"
+	default:
+		return fmt.Errorf("unknown entity type: %v", t)
+	}
+
+	message := Message{
+		ID:          InteractionID(),
+		Type:        "call_service",
+		Domain:      domain,
+		Service:     action,
+		ServiceData: nil,
+		Target: &Target{
+			EntityID: entity.GetEntityID(),
+		},
+	}
+
+	payload, err := json.Marshal(message)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	ha.wsClient.SendCommand(payload)
+	return nil
 }
