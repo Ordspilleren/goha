@@ -39,6 +39,14 @@ var testAutomation = goha.Automation{
 ```
 Within the `Condition` and `Action` functions you can do anything you would normally do in Go, including performing actions on the previously defined device variables.
 
+Lastly, you will need to assign the automation to an entity that will trigger it:
+
+```go
+officeButton.SetAutomations(testAutomation)
+```
+
+In the above example, whenever the state of `officeButton` changes, the automation will be evaluated.
+
 ### Unit tests for automations
 One of the primary benefits of writing automations as code is that we get the ability to properly test them.
 

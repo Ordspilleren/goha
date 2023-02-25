@@ -44,6 +44,8 @@ func (e *HAEntity) GetPreviousState() State {
 	return e.previousState
 }
 
+// TODO: Maybe having this as part of the entity doesn't make sense.
+// We could move it to the automation with syntax like automation.Triggers(...Entity).
 func (e *HAEntity) SetAutomations(automations ...Automation) *HAEntity {
 	e.automations = append(e.automations, automations...)
 	return e
@@ -52,27 +54,3 @@ func (e *HAEntity) SetAutomations(automations ...Automation) *HAEntity {
 func (e *HAEntity) GetAutomations() []Automation {
 	return e.automations
 }
-
-/* TODO: Can we make this work?
-
-func (e *HAEntity) Light() *Light {
-	return &Light{e}
-}
-
-func (e *HAEntity) BinarySensor() *BinarySensor {
-	return &BinarySensor{e}
-}
-
-func (e *HAEntity) Sensor() *Sensor {
-	return &Sensor{e}
-}
-
-func (e *HAEntity) Person() *Person {
-	return &Person{e}
-}
-
-func (e *HAEntity) Sun() *Sun {
-	return &Sun{e}
-}
-
-*/
