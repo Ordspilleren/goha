@@ -1,3 +1,5 @@
+github.com/Southclaws/opt v0.6.0 h1:DnsHXMfeW8vV1y2oa26bpx1dn76PERw4QNw25b6U498=
+github.com/Southclaws/opt v0.6.0/go.mod h1:zGjXSHmM4ScFX3TLkCr8TdVvd4KAcZq0mwWtzqoqwwQ=
 github.com/gobwas/httphead v0.1.0 h1:exrUm0f4YX0L7EBwZHuCF4GDp8aJfVeBrlLQrs6NqWU=
 github.com/gobwas/httphead v0.1.0/go.mod h1:O/RXo79gxV8G+RqlR/otEwx4Q36zl9rqC5u12GKvMCM=
 github.com/gobwas/pool v0.2.1 h1:xfeeEhW7pwmX8nuLVlqbzVc7udMDrwetjEv+TZIz1og=

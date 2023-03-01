@@ -1,7 +1,9 @@
 package goha
 
-func mergef[T comparable](a, b *T) {
-	if *b != *new(T) {
+import "github.com/Southclaws/opt"
+
+func mergef[T comparable](a, b *opt.Optional[T]) {
+	if b.Ok() {
 		*a = *b
 	}
 }

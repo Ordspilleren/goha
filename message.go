@@ -1,6 +1,10 @@
 package goha
 
-import "time"
+import (
+	"time"
+
+	"github.com/Southclaws/opt"
+)
 
 type Message struct {
 	ID          int      `json:"id,omitempty"`
@@ -19,23 +23,24 @@ type Message struct {
 	Error       *Error   `json:"error,omitempty"`
 }
 type Attributes struct {
-	RgbColor          []int     `json:"rgb_color,omitempty"`
-	ColorTemp         int       `json:"color_temp,omitempty"`
-	SupportedFeatures int       `json:"supported_features,omitempty"`
-	XyColor           []float64 `json:"xy_color,omitempty"`
-	Brightness        int       `json:"brightness,omitempty"`
-	WhiteValue        int       `json:"white_value,omitempty"`
-	NextDawn          time.Time `json:"next_dawn,omitempty"`
-	NextDusk          time.Time `json:"next_dusk,omitempty"`
-	NextMidnight      time.Time `json:"next_midnight,omitempty"`
-	NextNoon          time.Time `json:"next_noon,omitempty"`
-	NextRising        time.Time `json:"next_rising,omitempty"`
-	NextSetting       time.Time `json:"next_setting,omitempty"`
-	Elevation         float64   `json:"elevation,omitempty"`
-	Azimuth           float64   `json:"azimuth,omitempty"`
-	Rising            bool      `json:"rising,omitempty"`
-	FriendlyName      string    `json:"friendly_name,omitempty"`
-	Source            string    `json:"source,omitempty"`
+	RgbColor          []opt.Optional[int]     `json:"rgb_color,omitempty"`
+	ColorTemp         opt.Optional[int]       `json:"color_temp,omitempty"`
+	SupportedFeatures opt.Optional[int]       `json:"supported_features,omitempty"`
+	XyColor           []opt.Optional[float64] `json:"xy_color,omitempty"`
+	Transition        opt.Optional[int]       `json:"transition,omitempty"`
+	Brightness        opt.Optional[int]       `json:"brightness,omitempty"`
+	WhiteValue        opt.Optional[int]       `json:"white_value,omitempty"`
+	NextDawn          opt.Optional[time.Time] `json:"next_dawn,omitempty"`
+	NextDusk          opt.Optional[time.Time] `json:"next_dusk,omitempty"`
+	NextMidnight      opt.Optional[time.Time] `json:"next_midnight,omitempty"`
+	NextNoon          opt.Optional[time.Time] `json:"next_noon,omitempty"`
+	NextRising        opt.Optional[time.Time] `json:"next_rising,omitempty"`
+	NextSetting       opt.Optional[time.Time] `json:"next_setting,omitempty"`
+	Elevation         opt.Optional[float64]   `json:"elevation,omitempty"`
+	Azimuth           opt.Optional[float64]   `json:"azimuth,omitempty"`
+	Rising            opt.Optional[bool]      `json:"rising,omitempty"`
+	FriendlyName      opt.Optional[string]    `json:"friendly_name,omitempty"`
+	Source            opt.Optional[string]    `json:"source,omitempty"`
 }
 type Context struct {
 	ID       string      `json:"id,omitempty"`
@@ -43,11 +48,11 @@ type Context struct {
 	UserID   string      `json:"user_id,omitempty"`
 }
 type State struct {
-	LastChanged float64    `json:"lc,omitempty"`
-	LastUpdated float64    `json:"lu,omitempty"`
-	State       string     `json:"s,omitempty"`
-	Attributes  Attributes `json:"a,omitempty"`
-	Context     any        `json:"c,omitempty"`
+	LastChanged opt.Optional[float64] `json:"lc,omitempty"`
+	LastUpdated opt.Optional[float64] `json:"lu,omitempty"`
+	State       opt.Optional[string]  `json:"s,omitempty"`
+	Attributes  Attributes            `json:"a,omitempty"`
+	Context     any                   `json:"c,omitempty"`
 }
 type Diff struct {
 	Additions State         `json:"+,omitempty"`

@@ -74,6 +74,10 @@ func (ha *HomeAssistant) AddSun(entityId string) *Sun {
 	return ha.AddEntity(&Sun{}, entityId).(*Sun)
 }
 
+func (ha *HomeAssistant) AddMediaPlayer(entityId string) *MediaPlayer {
+	return ha.AddEntity(&MediaPlayer{}, entityId).(*MediaPlayer)
+}
+
 func (ha *HomeAssistant) sendAuth() {
 	auth := Message{
 		Type:        "auth",
@@ -134,7 +138,7 @@ func (ha *HomeAssistant) stateChanger(wsMessage []byte) {
 	}
 }
 
-func (ha *HomeAssistant) SendCommand(entity Entity, action string) error {
+func (ha *HomeAssistant) SendCommand(entity Entity, action string, data any) error {
 	var domain string
 	switch t := entity.(type) {
 	case *Light:
@@ -148,7 +152,7 @@ func (ha *HomeAssistant) SendCommand(entity Entity, action string) error {
 		Type:        "call_service",
 		Domain:      domain,
 		Service:     action,
-		ServiceData: nil,
+		ServiceData: data,
 		Target: &Target{
 			EntityID: entity.GetEntityID(),
 		},
@@ -158,6 +162,8 @@ func (ha *HomeAssistant) SendCommand(entity Entity, action string) error {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	log.Print(string(payload))
 
 	ha.wsClient.SendCommand(payload)
 	return nil

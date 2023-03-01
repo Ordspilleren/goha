@@ -5,16 +5,17 @@ import (
 	"testing"
 
 	goha "github.com/Ordspilleren/goha"
+	"github.com/Southclaws/opt"
 )
 
 type MockIntegration struct {
 }
 
-func (t *MockIntegration) SendCommand(entity goha.Entity, action string) error {
+func (t *MockIntegration) SendCommand(entity goha.Entity, action string, data any) error {
 	switch t := entity.(type) {
 	case *goha.Light:
 		if action == "turn_on" {
-			t.SetState(goha.State{State: "on"})
+			t.SetState(goha.State{State: opt.New("on")})
 		}
 	default:
 		return fmt.Errorf("unknown entity type: %v", t)
@@ -27,12 +28,12 @@ func TestAutomation(t *testing.T) {
 	officeButton.SetIntegration(&MockIntegration{})
 
 	officeButton.SetState(goha.State{
-		State: "on",
+		State: opt.New("on"),
 	})
 
 	testAutomation.Evaluate(officeButton)
 
-	if officeLight.GetState().State != "on" {
+	if officeLight.GetState().State.String() != "on" {
 		t.Error("light not on")
 	}
 }

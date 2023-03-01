@@ -1,5 +1,5 @@
 package goha
 
 type Integration interface {
-	SendCommand(Entity, string) error
+	SendCommand(Entity, string, any) error
 }
