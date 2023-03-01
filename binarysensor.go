@@ -5,7 +5,7 @@ type BinarySensor struct {
 }
 
 func (b *BinarySensor) Triggered() bool {
-	if b.GetState().State.OrZero() == "on" {
+	if b.GetState().State == "on" {
 		return true
 	} else {
 		return false

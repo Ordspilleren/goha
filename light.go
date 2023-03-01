@@ -1,13 +1,11 @@
 package goha
 
-import "github.com/Southclaws/opt"
-
 type Light struct {
 	HAEntity
 }
 
 func (l *Light) On() bool {
-	if l.GetState().State.OrZero() == "on" {
+	if l.GetState().State == "on" {
 		return true
 	} else {
 		return false
@@ -24,10 +22,10 @@ func (l *Light) TurnOff() error {
 	return nil
 }
 
-func (l *Light) Dim(transitionTime int, brightness int) error {
+func (l *Light) Fade(transitionTime int, brightness int) error {
 	data := Attributes{
-		Transition: opt.New(transitionTime),
-		Brightness: opt.New(brightness),
+		Transition:    &transitionTime,
+		BrightnessPct: &brightness,
 	}
 	l.integration.SendCommand(l, "turn_on", data)
 	return nil

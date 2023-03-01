@@ -1,10 +1,16 @@
 package goha
 
-import "github.com/Southclaws/opt"
-
-func mergef[T comparable](a, b *opt.Optional[T]) {
-	if b.Ok() {
+func mergef[T comparable](a, b *T) {
+	if b != nil {
 		*a = *b
+	}
+}
+
+func OrZero[T comparable](value *T) T {
+	if value != nil {
+		return *value
+	} else {
+		return *new(T)
 	}
 }
 
@@ -27,6 +33,7 @@ func (state *State) Merge(newState State) {
 	}
 
 	mergef(&state.Attributes.Brightness, &newState.Attributes.Brightness)
+	mergef(&state.Attributes.BrightnessPct, &newState.Attributes.BrightnessPct)
 	mergef(&state.Attributes.WhiteValue, &newState.Attributes.WhiteValue)
 	mergef(&state.Attributes.NextDawn, &newState.Attributes.NextDawn)
 	mergef(&state.Attributes.NextDusk, &newState.Attributes.NextDusk)
@@ -39,6 +46,7 @@ func (state *State) Merge(newState State) {
 	mergef(&state.Attributes.Rising, &newState.Attributes.Rising)
 	mergef(&state.Attributes.FriendlyName, &newState.Attributes.FriendlyName)
 	mergef(&state.Attributes.Source, &newState.Attributes.Source)
+	mergef(&state.Attributes.Transition, &newState.Attributes.Transition)
 
 	state.Context = newState.Context
 }
