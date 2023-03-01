@@ -129,7 +129,10 @@ func (ha *HomeAssistant) stateChanger(wsMessage []byte) {
 				log.Print("device added, state changed")
 			}
 			if state, ok := message.Event.EventChange[ha.Entities[entityIndex].GetEntityID()]; ok {
-				ha.Entities[entityIndex].SetState(state.Additions)
+				err := json.Unmarshal(state.Additions, ha.Entities[entityIndex].GetStatePtr())
+				if err != nil {
+					log.Printf("failed unmarshaling state change: %s", err)
+				}
 				for automationIndex := range ha.Entities[entityIndex].GetAutomations() {
 					go ha.Entities[entityIndex].GetAutomations()[automationIndex].Evaluate(ha.Entities[entityIndex])
 				}

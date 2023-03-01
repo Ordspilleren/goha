@@ -1,6 +1,7 @@
 package goha
 
 import (
+	"encoding/json"
 	"time"
 )
 
@@ -47,15 +48,15 @@ type Context struct {
 	UserID   string      `json:"user_id,omitempty"`
 }
 type State struct {
-	LastChanged float64    `json:"lc,omitempty"`
-	LastUpdated float64    `json:"lu,omitempty"`
-	State       string     `json:"s,omitempty"`
+	LastChanged *float64   `json:"lc,omitempty"`
+	LastUpdated *float64   `json:"lu,omitempty"`
+	State       *string    `json:"s,omitempty"`
 	Attributes  Attributes `json:"a,omitempty"`
 	Context     any        `json:"c,omitempty"`
 }
 type Diff struct {
-	Additions State         `json:"+,omitempty"`
-	Removals  StateRemovals `json:"-,omitempty"`
+	Additions json.RawMessage `json:"+,omitempty"`
+	Removals  StateRemovals   `json:"-,omitempty"`
 }
 type StateRemovals struct {
 	LastChanged float64  `json:"lc,omitempty"`

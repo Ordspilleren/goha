@@ -7,7 +7,7 @@ type Sun struct {
 }
 
 func (s *Sun) AboveHorizon() bool {
-	if s.GetState().State == "above_horizon" {
+	if s.GetState().String() == "above_horizon" {
 		return true
 	} else {
 		return false
@@ -15,7 +15,7 @@ func (s *Sun) AboveHorizon() bool {
 }
 
 func (s *Sun) BelowHorizon() bool {
-	if s.GetState().State == "below_horizon" {
+	if s.GetState().String() == "below_horizon" {
 		return true
 	} else {
 		return false

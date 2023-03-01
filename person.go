@@ -5,7 +5,7 @@ type Person struct {
 }
 
 func (p *Person) IsHome() bool {
-	if p.GetState().State == "home" {
+	if p.GetState().String() == "home" {
 		return true
 	} else {
 		return false

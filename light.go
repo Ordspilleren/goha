@@ -5,7 +5,7 @@ type Light struct {
 }
 
 func (l *Light) On() bool {
-	if l.GetState().State == "on" {
+	if l.GetState().String() == "on" {
 		return true
 	} else {
 		return false

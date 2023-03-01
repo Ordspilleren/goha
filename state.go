@@ -1,16 +1,9 @@
 package goha
 
+/*
 func mergef[T comparable](a, b *T) {
 	if b != nil {
 		*a = *b
-	}
-}
-
-func OrZero[T comparable](value *T) T {
-	if value != nil {
-		return *value
-	} else {
-		return *new(T)
 	}
 }
 
@@ -49,4 +42,21 @@ func (state *State) Merge(newState State) {
 	mergef(&state.Attributes.Transition, &newState.Attributes.Transition)
 
 	state.Context = newState.Context
+}
+*/
+
+func OrZero[T comparable](value *T) T {
+	if value != nil {
+		return *value
+	} else {
+		return *new(T)
+	}
+}
+
+func (state State) String() string {
+	if state.State != nil {
+		return *state.State
+	} else {
+		return ""
+	}
 }
