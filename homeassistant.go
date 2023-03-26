@@ -78,6 +78,14 @@ func (ha *HomeAssistant) AddMediaPlayer(entityId string) *MediaPlayer {
 	return ha.AddEntity(&MediaPlayer{}, entityId).(*MediaPlayer)
 }
 
+func (ha *HomeAssistant) AddVacuum(entityId string) *Vacuum {
+	return ha.AddEntity(&Vacuum{}, entityId).(*Vacuum)
+}
+
+func (ha *HomeAssistant) AddSchedule(entityId string) *Schedule {
+	return ha.AddEntity(&Schedule{}, entityId).(*Schedule)
+}
+
 func (ha *HomeAssistant) sendAuth() {
 	auth := Message{
 		Type:        "auth",
@@ -146,6 +154,8 @@ func (ha *HomeAssistant) SendCommand(entity Entity, action string, data any) err
 	switch t := entity.(type) {
 	case *Light:
 		domain = "light"
+	case *Vacuum:
+		domain = "vacuum"
 	default:
 		return fmt.Errorf("unknown entity type: %v", t)
 	}
