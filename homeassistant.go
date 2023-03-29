@@ -134,13 +134,18 @@ func (ha *HomeAssistant) stateChanger(wsMessage []byte) {
 		for entityIndex := range ha.Entities {
 			if state, ok := message.Event.EventAdd[ha.Entities[entityIndex].GetEntityID()]; ok {
 				ha.Entities[entityIndex].SetState(state)
-				log.Print("device added, state changed")
+				log.Printf("%s added! state changed to %s", ha.Entities[entityIndex].GetEntityID(), ha.Entities[entityIndex].GetState().String())
 			}
 			if state, ok := message.Event.EventChange[ha.Entities[entityIndex].GetEntityID()]; ok {
-				err := json.Unmarshal(state.Additions, ha.Entities[entityIndex].GetStatePtr())
+				newState := ha.Entities[entityIndex].GetState()
+				newState.State = new(string)
+				*newState.State = *ha.Entities[entityIndex].GetState().State
+				err := json.Unmarshal(state.Additions, &newState)
 				if err != nil {
 					log.Printf("failed unmarshaling state change: %s", err)
 				}
+				ha.Entities[entityIndex].SetState(newState)
+				log.Printf("%s changed! previous state: %s, current state: %s", ha.Entities[entityIndex].GetEntityID(), ha.Entities[entityIndex].GetPreviousState().String(), ha.Entities[entityIndex].GetState().String())
 				for automationIndex := range ha.Entities[entityIndex].GetAutomations() {
 					go ha.Entities[entityIndex].GetAutomations()[automationIndex].Evaluate(ha.Entities[entityIndex])
 				}

@@ -5,7 +5,6 @@ type Entity interface {
 	GetEntityID() string
 	SetEntityID(string)
 	GetState() State
-	GetStatePtr() *State
 	SetState(State)
 	GetPreviousState() State
 	SetAutomations(...Automation) *HAEntity
@@ -34,10 +33,6 @@ func (e *HAEntity) SetEntityID(entityID string) {
 
 func (e *HAEntity) GetState() State {
 	return e.state
-}
-
-func (e *HAEntity) GetStatePtr() *State {
-	return &e.state
 }
 
 func (e *HAEntity) SetState(state State) {

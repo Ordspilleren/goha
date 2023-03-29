@@ -1,13 +1,20 @@
 package goha
 
+import "time"
+
 type Sensor struct {
 	HAEntity
 }
 
-func (b *Sensor) On() bool {
-	return b.GetState().String() == "on"
+func (s *Sensor) On() bool {
+	return s.GetState().String() == "on"
 }
 
-func (b *Sensor) Off() bool {
-	return b.GetState().String() == "off"
+func (s *Sensor) Off() bool {
+	return s.GetState().String() == "off"
+}
+
+func (s *Sensor) Timestamp() time.Time {
+	time, _ := time.Parse(time.RFC3339, s.GetState().String())
+	return time
 }
