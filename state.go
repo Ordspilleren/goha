@@ -1,5 +1,36 @@
 package goha
 
+import "time"
+
+type Attributes struct {
+	RgbColor          []int
+	ColorTemp         int
+	SupportedFeatures int
+	XyColor           []float64
+	Transition        int
+	Brightness        int
+	BrightnessPct     int
+	WhiteValue        int
+	NextDawn          time.Time
+	NextDusk          time.Time
+	NextMidnight      time.Time
+	NextNoon          time.Time
+	NextRising        time.Time
+	NextSetting       time.Time
+	Elevation         float64
+	Azimuth           float64
+	Rising            bool
+	FriendlyName      string
+	Source            string
+}
+
+type State struct {
+	LastChanged float64
+	LastUpdated float64
+	State       string
+	Attributes  Attributes
+}
+
 /*
 func mergef[T comparable](a, b *T) {
 	if b != nil {
@@ -50,13 +81,5 @@ func OrZero[T comparable](value *T) T {
 		return *value
 	} else {
 		return *new(T)
-	}
-}
-
-func (state State) String() string {
-	if state.State != nil {
-		return *state.State
-	} else {
-		return ""
 	}
 }

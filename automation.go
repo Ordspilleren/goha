@@ -9,7 +9,7 @@ type Automation struct {
 }
 
 func DefaultCondition(e Entity) bool {
-	return e.GetState().String() != e.GetPreviousState().String()
+	return e.GetState().State != e.GetPreviousState().State
 }
 
 func (a *Automation) Evaluate(entity Entity) {

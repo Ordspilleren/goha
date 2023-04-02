@@ -5,7 +5,7 @@ type Light struct {
 }
 
 func (l *Light) On() bool {
-	if l.GetState().String() == "on" {
+	if l.GetState().State == "on" {
 		return true
 	} else {
 		return false
@@ -24,8 +24,8 @@ func (l *Light) TurnOff() error {
 
 func (l *Light) Fade(transitionTime int, brightness int) error {
 	data := Attributes{
-		Transition:    &transitionTime,
-		BrightnessPct: &brightness,
+		Transition:    transitionTime,
+		BrightnessPct: brightness,
 	}
 	l.integration.SendCommand(l, "turn_on", data)
 	return nil

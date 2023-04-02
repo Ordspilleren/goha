@@ -7,8 +7,8 @@ func SetupAutomations() {
 }
 
 var (
-	officeLight  = ha.AddLight("light.office")
-	officeButton = ha.AddBinarySensor("sensor.office_button")
+	officeLight  = homeautomation.AddLight("light.office")
+	officeButton = homeautomation.AddBinarySensor("sensor.office_button")
 )
 
 var testAutomation = goha.Automation{

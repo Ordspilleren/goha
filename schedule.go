@@ -5,5 +5,5 @@ type Schedule struct {
 }
 
 func (s *Schedule) Active() bool {
-	return s.GetState().String() == "on"
+	return s.GetState().State == "on"
 }

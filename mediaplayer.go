@@ -5,13 +5,13 @@ type MediaPlayer struct {
 }
 
 func (m *MediaPlayer) Playing() bool {
-	return m.GetState().String() == "playing"
+	return m.GetState().State == "playing"
 }
 
 func (m *MediaPlayer) Paused() bool {
-	return m.GetState().String() == "paused"
+	return m.GetState().State == "paused"
 }
 
 func (m *MediaPlayer) Stopped() bool {
-	return m.GetState().String() == "off" || m.GetState().String() == "idle" || m.GetState().String() == "standby"
+	return m.GetState().State == "off" || m.GetState().State == "idle" || m.GetState().State == "standby"
 }

@@ -1,7 +1,6 @@
-package goha
+package homeassistant
 
 import (
-	"encoding/json"
 	"time"
 )
 
@@ -55,8 +54,8 @@ type State struct {
 	Context     any        `json:"c,omitempty"`
 }
 type Diff struct {
-	Additions json.RawMessage `json:"+,omitempty"`
-	Removals  StateRemovals   `json:"-,omitempty"`
+	Additions State         `json:"+,omitempty"`
+	Removals  StateRemovals `json:"-,omitempty"`
 }
 type StateRemovals struct {
 	LastChanged float64  `json:"lc,omitempty"`
