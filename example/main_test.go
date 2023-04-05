@@ -45,7 +45,7 @@ func TestAutomation(t *testing.T) {
 
 	testAutomation.Evaluate(officeButton)
 
-	if officeLight.GetState().State != onState {
+	if officeLight.State().State != onState {
 		t.Error("light not on")
 	}
 }

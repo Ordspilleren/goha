@@ -2,13 +2,13 @@ package goha
 
 type Entity interface {
 	SetIntegration(Integration)
-	GetEntityID() string
+	EntityID() string
 	SetEntityID(string)
-	GetState() State
+	State() State
 	SetState(State)
-	GetPreviousState() State
+	PreviousState() State
 	SetAutomations(...Automation) *HAEntity
-	GetAutomations() []Automation
+	Automations() []Automation
 }
 
 type HAEntity struct {
@@ -23,7 +23,7 @@ func (e *HAEntity) SetIntegration(integration Integration) {
 	e.integration = integration
 }
 
-func (e *HAEntity) GetEntityID() string {
+func (e *HAEntity) EntityID() string {
 	return e.entityID
 }
 
@@ -31,7 +31,7 @@ func (e *HAEntity) SetEntityID(entityID string) {
 	e.entityID = entityID
 }
 
-func (e *HAEntity) GetState() State {
+func (e *HAEntity) State() State {
 	return e.state
 }
 
@@ -40,7 +40,7 @@ func (e *HAEntity) SetState(state State) {
 	e.state = state
 }
 
-func (e *HAEntity) GetPreviousState() State {
+func (e *HAEntity) PreviousState() State {
 	return e.previousState
 }
 
@@ -51,6 +51,6 @@ func (e *HAEntity) SetAutomations(automations ...Automation) *HAEntity {
 	return e
 }
 
-func (e *HAEntity) GetAutomations() []Automation {
+func (e *HAEntity) Automations() []Automation {
 	return e.automations
 }

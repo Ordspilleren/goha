@@ -76,7 +76,7 @@ func (ha *HomeAssistant) stateChanger(wsMessage []byte) {
 		log.Print("Authentication OK. Subscribing to events.")
 		var entityIds []string
 		for _, entity := range ha.Entities {
-			entityIds = append(entityIds, entity.GetEntityID())
+			entityIds = append(entityIds, entity.EntityID())
 		}
 		subscribe := Message{
 			ID:        InteractionID(),
@@ -93,19 +93,19 @@ func (ha *HomeAssistant) stateChanger(wsMessage []byte) {
 	if message.Type == "event" {
 		log.Print(string(wsMessage))
 		for entityIndex := range ha.Entities {
-			if haState, ok := message.Event.EventAdd[ha.Entities[entityIndex].GetEntityID()]; ok {
+			if haState, ok := message.Event.EventAdd[ha.Entities[entityIndex].EntityID()]; ok {
 				state := goha.State{}
 				mapState(&state, &haState)
 				ha.Entities[entityIndex].SetState(state)
-				log.Printf("%s added! state changed to %s", ha.Entities[entityIndex].GetEntityID(), ha.Entities[entityIndex].GetState().State)
+				log.Printf("%s added! state changed to %s", ha.Entities[entityIndex].EntityID(), ha.Entities[entityIndex].State().State)
 			}
-			if haState, ok := message.Event.EventChange[ha.Entities[entityIndex].GetEntityID()]; ok {
-				state := ha.Entities[entityIndex].GetState()
+			if haState, ok := message.Event.EventChange[ha.Entities[entityIndex].EntityID()]; ok {
+				state := ha.Entities[entityIndex].State()
 				mapState(&state, &haState.Additions)
 				ha.Entities[entityIndex].SetState(state)
-				log.Printf("%s changed! previous state: %s, current state: %s", ha.Entities[entityIndex].GetEntityID(), ha.Entities[entityIndex].GetPreviousState().State, ha.Entities[entityIndex].GetState().State)
-				for automationIndex := range ha.Entities[entityIndex].GetAutomations() {
-					go ha.Entities[entityIndex].GetAutomations()[automationIndex].Evaluate(ha.Entities[entityIndex])
+				log.Printf("%s changed! previous state: %s, current state: %s", ha.Entities[entityIndex].EntityID(), ha.Entities[entityIndex].PreviousState().State, ha.Entities[entityIndex].State().State)
+				for automationIndex := range ha.Entities[entityIndex].Automations() {
+					go ha.Entities[entityIndex].Automations()[automationIndex].Evaluate(ha.Entities[entityIndex])
 				}
 			}
 		}
@@ -169,7 +169,40 @@ func (ha *HomeAssistant) SendCommand(entity goha.Entity, action string, data any
 		Service:     action,
 		ServiceData: data,
 		Target: &Target{
-			EntityID: entity.GetEntityID(),
+			EntityID: entity.EntityID(),
+		},
+	}
+
+	payload, err := json.Marshal(message)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	log.Print(string(payload))
+
+	ha.wsClient.SendCommand(payload)
+	return nil
+}
+
+// WIP
+func (ha *HomeAssistant) SendNotification(device string, title string, body string) error {
+	message := Message{
+		ID:      InteractionID(),
+		Type:    "call_service",
+		Domain:  "notify",
+		Service: device,
+		ServiceData: Notification{
+			Title:   title,
+			Message: body,
+			Data: NotificationData{
+				Actions: []NotificationAction{
+					{
+						Action: "URI",
+						Title:  "Open Link",
+						URI:    "https://google.dk",
+					},
+				},
+			},
 		},
 	}
 

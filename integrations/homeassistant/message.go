@@ -81,3 +81,16 @@ type Error struct {
 type Target struct {
 	EntityID string `json:"entity_id,omitempty"`
 }
+type Notification struct {
+	Title   string           `json:"title,omitempty"`
+	Message string           `json:"message,omitempty"`
+	Data    NotificationData `json:"data,omitempty"`
+}
+type NotificationData struct {
+	Actions []NotificationAction `json:"actions,omitempty"`
+}
+type NotificationAction struct {
+	Action string `json:"action,omitempty"`
+	Title  string `json:"title,omitempty"`
+	URI    string `json:"uri,omitempty"`
+}

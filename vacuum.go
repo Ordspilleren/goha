@@ -5,7 +5,7 @@ type Vacuum struct {
 }
 
 func (v *Vacuum) Docked() bool {
-	return v.GetState().State == "docked"
+	return v.State().State == "docked"
 }
 
 func (v *Vacuum) StartCleaning() error {
