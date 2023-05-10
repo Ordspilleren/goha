@@ -158,6 +158,8 @@ func (ha *HomeAssistant) SendCommand(entity goha.Entity, action string, data any
 		domain = "light"
 	case *goha.Vacuum:
 		domain = "vacuum"
+	case *goha.InputDatetime:
+		domain = "input_datetime"
 	default:
 		return fmt.Errorf("unknown entity type: %v", t)
 	}

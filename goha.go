@@ -53,3 +53,7 @@ func (goha *Goha) AddVacuum(entityId string) *Vacuum {
 func (goha *Goha) AddSchedule(entityId string) *Schedule {
 	return goha.AddEntity(&Schedule{}, entityId).(*Schedule)
 }
+
+func (goha *Goha) AddInputDatetime(entityId string) *InputDatetime {
+	return goha.AddEntity(&InputDatetime{}, entityId).(*InputDatetime)
+}
