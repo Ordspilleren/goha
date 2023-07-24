@@ -14,7 +14,8 @@ var homeautomation = goha.Goha{
 }
 
 func main() {
-	SetupAutomations()
+	homeautomation.AddAutomations(automations...)
+
 	err := homeautomation.Start(&wg)
 	if err != nil {
 		log.Panic(err)

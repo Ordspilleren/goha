@@ -22,6 +22,11 @@ func (goha *Goha) AddEntity(entity Entity, entityId string) Entity {
 	return entity
 }
 
+func (goha *Goha) AddAutomations(automations ...Automation) error {
+	goha.PrimaryIntegration.RegisterAutomations(automations...)
+	return nil
+}
+
 func (goha *Goha) AddLight(entityId string) *Light {
 	return goha.AddEntity(&Light{}, entityId).(*Light)
 }

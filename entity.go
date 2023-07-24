@@ -7,8 +7,6 @@ type Entity interface {
 	State() State
 	SetState(State)
 	PreviousState() State
-	SetAutomations(...Automation) *HAEntity
-	Automations() []Automation
 }
 
 type HAEntity struct {
@@ -16,7 +14,6 @@ type HAEntity struct {
 	entityID      string
 	state         State
 	previousState State
-	automations   []Automation
 }
 
 func (e *HAEntity) SetIntegration(integration Integration) {
@@ -42,15 +39,4 @@ func (e *HAEntity) SetState(state State) {
 
 func (e *HAEntity) PreviousState() State {
 	return e.previousState
-}
-
-// TODO: Maybe having this as part of the entity doesn't make sense.
-// We could move it to the automation with syntax like automation.Triggers(...Entity).
-func (e *HAEntity) SetAutomations(automations ...Automation) *HAEntity {
-	e.automations = append(e.automations, automations...)
-	return e
-}
-
-func (e *HAEntity) Automations() []Automation {
-	return e.automations
 }

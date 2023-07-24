@@ -35,6 +35,11 @@ func (t *MockIntegration) RegisterEntities(entities ...goha.Entity) error {
 	return nil
 }
 
+func (t *MockIntegration) RegisterAutomations(automations ...goha.Automation) error {
+
+	return nil
+}
+
 func TestAutomation(t *testing.T) {
 	officeLight.SetIntegration(&MockIntegration{})
 	officeButton.SetIntegration(&MockIntegration{})

@@ -15,6 +15,7 @@ type HomeAssistant struct {
 	HAEndpoint    string
 	HAAccessToken string
 	Entities      []goha.Entity
+	Automations   []goha.Automation
 }
 
 var interactionId int
@@ -43,6 +44,12 @@ func (ha *HomeAssistant) Start(waitGroup *sync.WaitGroup) error {
 
 func (ha *HomeAssistant) RegisterEntities(entities ...goha.Entity) error {
 	ha.Entities = append(ha.Entities, entities...)
+
+	return nil
+}
+
+func (ha *HomeAssistant) RegisterAutomations(automations ...goha.Automation) error {
+	ha.Automations = append(ha.Automations, automations...)
 
 	return nil
 }
@@ -91,7 +98,7 @@ func (ha *HomeAssistant) stateChanger(wsMessage []byte) {
 	}
 
 	if message.Type == "event" {
-		log.Print(string(wsMessage))
+		//log.Print(string(wsMessage))
 		for entityIndex := range ha.Entities {
 			if haState, ok := message.Event.EventAdd[ha.Entities[entityIndex].EntityID()]; ok {
 				state := goha.State{}
@@ -103,9 +110,9 @@ func (ha *HomeAssistant) stateChanger(wsMessage []byte) {
 				state := ha.Entities[entityIndex].State()
 				mapState(&state, &haState.Additions)
 				ha.Entities[entityIndex].SetState(state)
-				log.Printf("%s changed! previous state: %s, current state: %s", ha.Entities[entityIndex].EntityID(), ha.Entities[entityIndex].PreviousState().State, ha.Entities[entityIndex].State().State)
-				for automationIndex := range ha.Entities[entityIndex].Automations() {
-					go ha.Entities[entityIndex].Automations()[automationIndex].Evaluate(ha.Entities[entityIndex])
+				//log.Printf("%s changed! previous state: %s, current state: %s", ha.Entities[entityIndex].EntityID(), ha.Entities[entityIndex].PreviousState().State, ha.Entities[entityIndex].State().State)
+				for i := range ha.Automations {
+					go ha.Automations[i].Evaluate(ha.Entities[entityIndex])
 				}
 			}
 		}
