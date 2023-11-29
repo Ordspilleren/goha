@@ -23,7 +23,10 @@ func (l *Light) TurnOff() error {
 }
 
 func (l *Light) Fade(transitionTime int, brightness int) error {
-	data := Attributes{
+	data := struct {
+		Transition    int `json:"transition,omitempty"`
+		BrightnessPct int `json:"brightness_pct,omitempty"`
+	}{
 		Transition:    transitionTime,
 		BrightnessPct: brightness,
 	}
