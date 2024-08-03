@@ -7,19 +7,11 @@ type Sun struct {
 }
 
 func (s *Sun) AboveHorizon() bool {
-	if s.State().State == "above_horizon" {
-		return true
-	} else {
-		return false
-	}
+	return s.State().State == "above_horizon"
 }
 
 func (s *Sun) BelowHorizon() bool {
-	if s.State().State == "below_horizon" {
-		return true
-	} else {
-		return false
-	}
+	return s.State().State == "below_horizon"
 }
 
 func (s *Sun) NextSetting() time.Time {
